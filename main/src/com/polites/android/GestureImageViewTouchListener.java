@@ -477,6 +477,14 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		return minScale;
 	}
 
+	public float getCenterX() {
+		return centerX;
+	}
+	
+	public float getCenterY() {
+		return centerY;
+	}
+	
 	public void setMinScale(float minScale) {
 		this.minScale = minScale;
 	}

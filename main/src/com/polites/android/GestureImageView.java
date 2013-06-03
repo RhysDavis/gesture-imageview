@@ -127,6 +127,10 @@ public class GestureImageView extends ImageView  {
 		initImage();
 	}
 
+	public float getStartingScale() {
+		return startingScale;
+	}
+	
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
@@ -480,6 +484,14 @@ public class GestureImageView extends ImageView  {
 		return recycle;
 	}
 
+	public boolean isCentered() {
+		if (getImageX() == gestureImageViewTouchListener.getCenterX()
+				&& getImageY() == gestureImageViewTouchListener.getCenterY()) {
+			return true;
+		} else
+			return false;
+	}
+	
 	public void setRecycle(boolean recycle) {
 		this.recycle = recycle;
 	}
