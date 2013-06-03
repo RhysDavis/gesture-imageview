@@ -218,13 +218,7 @@ public class GestureImageView extends ImageView  {
 
 			gestureImageViewTouchListener = new GestureImageViewTouchListener(this, measuredWidth, measuredHeight);
 			
-			if(isLandscape()) {
-				gestureImageViewTouchListener.setMinScale(minScale * fitScaleHorizontal);
-			}
-			else {
-				gestureImageViewTouchListener.setMinScale(minScale * fitScaleVertical);
-			}
-			
+			gestureImageViewTouchListener.setMinScale(Math.min((float) fitScaleHorizontal, (float) fitScaleVertical));
 			
 			gestureImageViewTouchListener.setMaxScale(maxScale * startingScale);
 			
@@ -267,12 +261,7 @@ public class GestureImageView extends ImageView  {
 				break;
 				
 			case CENTER_INSIDE: 
-				if(isLandscape()) {
-					startingScale = fitScaleHorizontal;
-				}
-				else {
-					startingScale = fitScaleVertical;
-				}
+				startingScale = Math.min(fitScaleHorizontal, fitScaleVertical);
 				break;
 		}
 	}
@@ -381,7 +370,7 @@ public class GestureImageView extends ImageView  {
 		
 		if(!layout) {
 			requestLayout();
-			redraw();
+			reset();
 		}
 	}
 
@@ -445,7 +434,7 @@ public class GestureImageView extends ImageView  {
 	public void setMinScale(float min) {
 		this.minScale = min;
 		if(gestureImageViewTouchListener != null) {
-			gestureImageViewTouchListener.setMinScale(min * fitScaleHorizontal);
+			gestureImageViewTouchListener.setMinScale(min * Math.min(fitScaleHorizontal, fitScaleVertical));
 		}
 	}
 

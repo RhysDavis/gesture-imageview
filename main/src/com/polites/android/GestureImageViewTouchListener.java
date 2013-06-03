@@ -183,82 +183,18 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 	private void startZoom(MotionEvent e) {
 		inZoom = true;
 		zoomAnimation.reset();
-		
-		float zoomTo = 1.0f;
-		
-		if(image.isLandscape()) {
-			if(image.getDeviceOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-				int scaledHeight = image.getScaledHeight();
 				
-				if(scaledHeight < canvasHeight) {
-					zoomTo = fitScaleVertical / currentScale;
-					zoomAnimation.setTouchX(e.getX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-				else {
-					zoomTo = fitScaleHorizontal / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-			}
-			else {
-				int scaledWidth = image.getScaledWidth();
-				
-				if(scaledWidth == canvasWidth) {
-					zoomTo = currentScale*4.0f;
-					zoomAnimation.setTouchX(e.getX());
-					zoomAnimation.setTouchY(e.getY());
-				}
-				else if(scaledWidth < canvasWidth) {
-					zoomTo = fitScaleHorizontal / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(e.getY());
-				}
-				else {
-					zoomTo = fitScaleHorizontal / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-			}
-		}
-		else {
-			if(image.getDeviceOrientation() == Configuration.ORIENTATION_PORTRAIT) {
-				
-				int scaledHeight = image.getScaledHeight();
-				
-				if(scaledHeight == canvasHeight) {
-					zoomTo = currentScale*4.0f;
-					zoomAnimation.setTouchX(e.getX());
-					zoomAnimation.setTouchY(e.getY());
-				}
-				else if(scaledHeight < canvasHeight) {
-					zoomTo = fitScaleVertical / currentScale;
-					zoomAnimation.setTouchX(e.getX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-				else {
-					zoomTo = fitScaleVertical / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-			}
-			else {
-				int scaledWidth = image.getScaledWidth();
-				
-				if(scaledWidth < canvasWidth) {
-					zoomTo = fitScaleHorizontal / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(e.getY());
-				}
-				else {
-					zoomTo = fitScaleVertical / currentScale;
-					zoomAnimation.setTouchX(image.getCenterX());
-					zoomAnimation.setTouchY(image.getCenterY());
-				}
-			}
+		if (currentScale != getMinScale()) {
+			// zoom back to min scale
+			zoomAnimation.zoomToMin(minScale);
+		} else {
+			// zoom in twice the current scale
+			float zoomTo = currentScale * 4;
+			zoomAnimation.setTouchX(e.getX());
+			zoomAnimation.setTouchY(e.getY());
+			zoomAnimation.setZoom(zoomTo);
 		}
 		
-		zoomAnimation.setZoom(zoomTo);
 		image.animationStart(zoomAnimation);
 	}
 	
@@ -373,15 +309,8 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		boundCoordinates();
 		
 		if(!canDragX && !canDragY) {
-			
-			if(image.isLandscape()) {
-				currentScale = fitScaleHorizontal;
-				lastScale = fitScaleHorizontal;
-			}
-			else {
-				currentScale = fitScaleVertical;
-				lastScale = fitScaleVertical;
-			}			
+			currentScale = Math.min((float) fitScaleHorizontal, (float) fitScaleVertical);
+			lastScale = Math.min((float) fitScaleHorizontal, (float) fitScaleVertical);			
 		}
 
 		image.setScale(currentScale);
