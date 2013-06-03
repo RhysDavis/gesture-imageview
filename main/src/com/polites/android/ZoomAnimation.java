@@ -42,6 +42,9 @@ public class ZoomAnimation implements Animation {
 	private long animationLengthMS = 200;
 	private long totalTime = 0;
 	
+	private boolean atMinZoom;
+	private float minScale;
+	
 	private ZoomAnimationListener zoomAnimationListener;
 
 	/* (non-Javadoc)
@@ -130,7 +133,13 @@ public class ZoomAnimation implements Animation {
 	}
 	
 	public void setZoom(float zoom) {
+		this.atMinZoom = false;
 		this.zoom = zoom;
+	}
+	
+	public void zoomToMin(float pMinScale) {
+		this.minScale = pMinScale;
+		this.atMinZoom = true;
 	}
 	
 	public float getTouchX() {
