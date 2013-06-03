@@ -15,7 +15,6 @@
  */
 package com.polites.android;
 
-import android.content.res.Configuration;
 import android.graphics.PointF;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -133,9 +132,9 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 			}
 
 			@Override
-			public void onComplete() {
+			public void onComplete(boolean toMinimum) {
 				inZoom = false;
-				handleUp();
+				handleUp(toMinimum);
 			}
 		});
 		
@@ -214,7 +213,7 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 				}
 				 
 				if(event.getAction() == MotionEvent.ACTION_UP) {
-					handleUp();
+					handleUp(false);
 				}
 				else if(event.getAction() == MotionEvent.ACTION_DOWN) {
 					stopAnimations();
@@ -291,7 +290,7 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		return true;
 	}
 	
-	protected void handleUp() {
+	protected void handleUp(boolean pToMin) {
 		
 		multiTouch = false;
 		
@@ -308,13 +307,15 @@ public class GestureImageViewTouchListener implements OnTouchListener {
 		
 		boundCoordinates();
 		
-		if(!canDragX && !canDragY) {
+		if(!canDragX && !canDragY || pToMin) {
 			currentScale = Math.min((float) fitScaleHorizontal, (float) fitScaleVertical);
 			lastScale = Math.min((float) fitScaleHorizontal, (float) fitScaleVertical);			
+			image.setPosition(centerX, centerY);
+		} else {
+			image.setPosition(next.x, next.y);
 		}
 
 		image.setScale(currentScale);
-		image.setPosition(next.x, next.y);
 		
 		if(imageListener != null) {
 			imageListener.onScale(currentScale);

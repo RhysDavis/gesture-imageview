@@ -193,9 +193,7 @@ public class GestureImageView extends ImageView  {
 			
 			computeCropScale(imageWidth, imageHeight, measuredWidth, measuredHeight);
 			
-			if(startingScale <= 0.0f) {
-				computeStartingScale(imageWidth, imageHeight, measuredWidth, measuredHeight);
-			}
+			computeStartingScale(imageWidth, imageHeight, measuredWidth, measuredHeight);
 
 			scaleAdjust = startingScale;
 
@@ -366,6 +364,8 @@ public class GestureImageView extends ImageView  {
 			if(colorFilter != null) {
 				this.drawable.setColorFilter(colorFilter);
 			}
+			layout = false;
+			startingScale = -1.0f;
 		}
 		
 		if(!layout) {
@@ -489,9 +489,7 @@ public class GestureImageView extends ImageView  {
 		x = centerX;
 		y = centerY;
 		scaleAdjust = startingScale;
-		if (gestureImageViewTouchListener != null) {
-		    gestureImageViewTouchListener.reset();
-		}
+
 		redraw();
 	}
 

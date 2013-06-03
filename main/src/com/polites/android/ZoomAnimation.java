@@ -42,7 +42,7 @@ public class ZoomAnimation implements Animation {
 	private long animationLengthMS = 200;
 	private long totalTime = 0;
 	
-	private boolean atMinZoom;
+	private boolean zoomToMin;
 	private float minScale;
 	
 	private ZoomAnimationListener zoomAnimationListener;
@@ -60,7 +60,7 @@ public class ZoomAnimation implements Animation {
 			startScale = view.getScale();
 			scaleDiff = (zoom * startScale) - startScale;
 			
-			if(scaleDiff > 0) {
+			if(scaleDiff > 0 && !zoomToMin) {
 				// Calculate destination for midpoint
 				VectorF vector = new VectorF();
 				
@@ -84,6 +84,7 @@ public class ZoomAnimation implements Animation {
 			}
 			else {
 				// Zoom out to center
+				scaleDiff = minScale - startScale;
 				xDiff = view.getCenterX() - startX;
 				yDiff = view.getCenterY() - startY;
 			}
@@ -116,7 +117,7 @@ public class ZoomAnimation implements Animation {
 
 			if(zoomAnimationListener != null) {
 				zoomAnimationListener.onZoom(newScale, newX, newY);
-				zoomAnimationListener.onComplete();
+				zoomAnimationListener.onComplete(zoomToMin);
 			}
 			
 			return false;
@@ -133,13 +134,13 @@ public class ZoomAnimation implements Animation {
 	}
 	
 	public void setZoom(float zoom) {
-		this.atMinZoom = false;
+		this.zoomToMin = false;
 		this.zoom = zoom;
 	}
 	
 	public void zoomToMin(float pMinScale) {
 		this.minScale = pMinScale;
-		this.atMinZoom = true;
+		this.zoomToMin = true;
 	}
 	
 	public float getTouchX() {
