@@ -18,6 +18,7 @@ package com.polites.android;
 import java.io.InputStream;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -304,6 +305,12 @@ public class GestureImageView extends ImageView  {
 				drawable.draw(canvas);
 
 				canvas.restore();
+			} else {
+				if (drawable == null) {
+					Log.e("Gesture", "Drawable is null");
+				} else if (isRecycled()) {
+					Log.e("Gesture", "Drawable is recycled");
+				}
 			}
 
 			if(drawLock.availablePermits() <= 0) {
@@ -493,6 +500,7 @@ public class GestureImageView extends ImageView  {
 		redraw();
 	}
 
+	@SuppressLint("Override")
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
 	}
@@ -549,6 +557,7 @@ public class GestureImageView extends ImageView  {
 						m.postRotate(imageOrientation);
 						Bitmap rotated = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
 						bmp.recycle();
+						Log.e("Gesture", "Recycling in here bitchez");
 						setImageDrawable(new BitmapDrawable(getResources(), rotated));
 					}
 					else {
